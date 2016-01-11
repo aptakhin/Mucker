@@ -16,9 +16,9 @@ type Block
 end
 
 type For
-	children
-	iter_var
-	iter_collection
+    children
+    iter_var
+    iter_collection
 end
 
 type Html
@@ -37,7 +37,7 @@ function parse_template(str, enable_tags)
 
     cur_node = Block([])
     parse_stack = []
-	push!(parse_stack, cur_node)
+    push!(parse_stack, cur_node)
 
     for c = str
         #println(c)
@@ -77,7 +77,7 @@ function parse_template(str, enable_tags)
                 check_cmd = strip(cur_cnt)
                 println("<", check_cmd, ">")
                 if startswith(check_cmd, "for ")
-					range = match(r"(?P<iter_var>\w+)=(?P<iter_collection>\w+)", check_cmd)
+                    range = match(r"(?P<iter_var>\w+)=(?P<iter_collection>\w+)", check_cmd)
                     println("<FOR>", range)
                     add = For([], range[:iter_var], range[:iter_collection])
                     push!(parse_stack, add)
@@ -94,11 +94,11 @@ function parse_template(str, enable_tags)
                     cur_state = Wait::ParserState
                     cur_type = Other::LexemType
                 else
-					if cur_type == Arg::LexemType
-                    	lex = Value(cur_cnt)
-					else
-						lex = Html(cur_cnt)
-					end
+                    if cur_type == Arg::LexemType
+                        lex = Value(cur_cnt)
+                    else
+                        lex = Html(cur_cnt)
+                    end
                     push!(parse_stack[size(parse_stack)[1]].children, lex)
                     cur_cnt = ""
                     cur_state = Wait::ParserState
@@ -128,10 +128,10 @@ function render(node::For, context)
     rendered = ""
 
     vals = get(context, node.iter_collection, [])
-	for i=vals
+    for i=vals
         current_context = Dict(context)
         current_context[node.iter_var] = i
-		for child=node.children
+        for child=node.children
             rendered = rendered * render(child, current_context)
         end
     end
